@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/jekyll-diary"
+
+begin
+  JekyllDiary::Application.new(ARGV).run
+rescue Errno::ENOENT => err
+  abort "jekyll-diary: #{err.message}"
+rescue Slop::InvalidOptionError => err
+  abort "jekyll-diary: #{err.message}\nusage: jekyll-diary [-bns] [file ...]"
+end
