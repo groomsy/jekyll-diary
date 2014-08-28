@@ -1,3 +1,4 @@
+require_relative 'draft'
 require_relative 'filename'
 
 module JekyllDiary
@@ -22,7 +23,10 @@ module JekyllDiary
               draft_name = args.join(' ')
               file_name = draft_name.friendly_filenamize
               puts "You want to create a draft with the title \"#{draft_name}\"."
-              puts "The draft can be found at _drafts/#{file_name}.md."
+            
+              Draft.create_drafts_directory()
+              
+              Draft.create_draft(file_name, draft_name)
             end
           end
         end
