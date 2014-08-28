@@ -1,3 +1,5 @@
+require_relative 'filename'
+
 module JekyllDiary
   class Application
     def initialize(argv)
@@ -5,18 +7,23 @@ module JekyllDiary
     end
     
     def run
-      didUnderstandCommand = false
+      did_understand_command = false
     
       opts = slop(help: true) do
         command 'draft' do
           banner 'Usage: jekyll-diary draft [options]'
           description 'Draft a Post'
           
-          on :t=, :title=, 'The title of the draft', required: true
-          
           run do |opts, args|
-            didUnderstandCommand = true
-            puts "You want to create a draft with the title #{opts[:title]}"
+            did_understand_command = true
+            if args.length == 0
+              puts "You must specify a title for the draft."
+            else
+              draft_name = args.join(' ')
+              file_name = draft_name.friendly_filenamize
+              puts "You want to create a draft with the title \"#{draft_name}\"."
+              puts "The draft can be found at _drafts/#{file_name}.md."
+            end
           end
         end
         
@@ -24,16 +31,18 @@ module JekyllDiary
           banner 'Usage: jekyll-diary publish [options]'
           description 'Publish a Post'
           
-          on :f=, :file=, 'The name of the file you wish to publish', required: true
-          
           run do |opts, args|
-            didUnderstandCommand = true
-            puts "You want to publish #{opts[:file]}"
+            did_understand_command = true
+            if args.length == 0
+              puts "You must specify a draft to publish."
+            else
+              puts "You want to publish #{args.first}."
+            end
           end
         end
       end
       
-      if !didUnderstandCommand
+      if !did_understand_command
         puts "Did not understand!"
       end
     end
@@ -44,5 +53,6 @@ module JekyllDiary
       $stderr.puts e
       exit 1
     end
+    
   end
 end
