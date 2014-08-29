@@ -10,6 +10,11 @@ module JekyllDiary
     def run
       did_understand_command = false
     
+      if !File.exists?("_config.yml")
+        puts "You must use `jekyll-diary` inside a Jekyll site directory."
+        exit 1
+      end
+    
       opts = slop(help: true) do
         command 'draft' do
           banner 'Usage: jekyll-diary draft [options]'
